@@ -493,12 +493,6 @@ evaluate_f1 <- function(true_matrix, est_matrix) {
   return(2 * precision * recall / (precision + recall))
 }
 
-# evaluate_auc <- function(true_matrix, est_matrix) {
-#   true_labels <- as.vector(true_matrix != 0)
-#   scores <- as.vector(abs(est_matrix))
-#   roc_obj <- roc(true_labels, scores)
-#   return(auc(roc_obj))
-# }
 evaluate_auc <- function(true_matrix, est_matrix) {
   true_labels <- as.vector(true_matrix != 0)
   scores <- as.vector(abs(est_matrix))
