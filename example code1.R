@@ -1,6 +1,6 @@
 #### here are the all example codes of RMTVGL:
 
-##### 1. RM-TVGL 05/15/2025  5 runs, example code, synthetic dataset(10dimentional), all penalties:
+##### 1. RM-TVGL 05/15/2025  5 runs, example code, synthetic dataset(10dimentional), all penalties(Table 1):
 library(Matrix)
 library(MASS)
 library(pROC)
@@ -9,7 +9,7 @@ library(dplyr)
 # Function to summarize with mean ± sd
 summarize_metric <- function(x) sprintf("%.3f ± %.3f", mean(x), sd(x))
 
-# Parameters
+# some Parameters
 T <- 100
 p <- 10
 lambda <- 0.5
@@ -101,7 +101,7 @@ print(summary_df)
 write.csv(summary_df, "RM_TVGL_10gene synthetic_summary.csv", row.names = FALSE)
 
 ################
-#2.10gene synthetic data the plot for different delta valueof huber loss
+#2.10gene synthetic data the plot for different delta value of huber loss(Fig1):
 #curves of auc ,f1,mac,stability fr different delta:
 # Load required libraries
 library(Matrix)
@@ -111,7 +111,7 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 
-# --- Parameters ---
+# Parameters
 T <- 100
 p <- 10
 lambda <- 0.5
@@ -140,7 +140,7 @@ run_one_setting <- function(data_list, true_list, lambda, beta, delta, penalty) 
   )
 }
 
-# --- Run all settings ---
+# Run all settings 
 for (penalty in penalties) {
   for (delta in delta_list) {
     cat("Running penalty =", penalty, ", delta =", delta, "\n")
@@ -181,7 +181,7 @@ for (penalty in penalties) {
   }
 }
 
-# --- Prepare data for plotting ---
+# Prepare data for plotting
 df_all <- bind_rows(all_results)
 df_long <- df_all %>%
   pivot_longer(cols = c(F1, AUC, MAC, Stability), names_to = "Metric", values_to = "Value")
@@ -216,7 +216,7 @@ for (metric in metrics) {
 }
 
 
-########## 20 gene synthetic dataset and output:
+########## 3. 20 gene synthetic dataset and output(I didn't put this result in the paper, since I think one synthetic dataset is enough):
 library(Matrix)
 library(MASS)
 library(pROC)
@@ -235,10 +235,10 @@ evaluate_auc <- function(true_mat, est_mat) {
   return(as.numeric(pROC::auc(roc_obj)))
 }
 
-# --- Summarizer ---
+# Summarizer 
 summarize_metric <- function(x) sprintf("%.3f ± %.3f", mean(x), sd(x))
 
-# --- Parameters ---
+# Parameters 
 T <- 100
 p <- 20
 lambda <- 0.5
@@ -250,7 +250,7 @@ methods <- c("TVGL", "RM-TVGL")
 n_repeats <- 5
 all_results <- list()
 
-# --- Main loop ---
+# loop
 for (rep in 1:n_repeats) {
   cat("Running repetition", rep, "\n")
   set.seed(100 + rep)
@@ -273,7 +273,7 @@ for (rep in 1:n_repeats) {
   for (penalty in penalties) {
     cat("  Penalty:", penalty, "\n")
     
-    # --- TVGL ---
+    #  TVGL 
     out_tvgl <- time_run({
       tvgl_function(data_list, lambda = lambda, beta = beta,
                     penalty_type = ifelse(penalty == "elastic", "l1", penalty))
@@ -281,7 +281,7 @@ for (rep in 1:n_repeats) {
     est_tvgl <- out_tvgl$result
     time_tvgl <- out_tvgl$runtime
     
-    # --- RM-TVGL ---
+    #  RM-TVGL 
     out_rmtvgl <- time_run({
       rmtvgl_function(data_list, lambda = lambda, beta = beta, delta = delta,
                       penalty_type = penalty, alpha = alpha_elastic)
@@ -289,7 +289,7 @@ for (rep in 1:n_repeats) {
     est_rmtvgl <- out_rmtvgl$result
     time_rmtvgl <- out_rmtvgl$runtime
     
-    # --- Store metrics ---
+    #  Store metrics 
     for (method in methods) {
       est <- if (method == "TVGL") est_tvgl else est_rmtvgl
       time <- if (method == "TVGL") time_tvgl else time_rmtvgl
@@ -308,7 +308,7 @@ for (rep in 1:n_repeats) {
   }
 }
 
-# --- Final summary ---
+#  Final summary 
 df_all <- bind_rows(all_results)
 
 summary_df <- df_all %>%
@@ -332,7 +332,7 @@ write.csv(summary_df, "Synthetic20_TVGL_RMTVGL_summary.csv", row.names = FALSE)
 
 
 
-#######05/15/2025 collin cancer real dataset :
+#######4. real dataset part: 05/15/2025 collin cancer real dataset :
 # Required packages
 install.packages("e1071")
 install.packages("Matrix")
@@ -378,79 +378,19 @@ f1_tvgl <- mean(sapply(1:length(data_list), function(t) evaluate_f1(theta_tvgl[[
 auc_tvgl <- mean(sapply(1:length(data_list), function(t) evaluate_auc(theta_tvgl[[t]], theta_tvgl[[t]])))
 
 
-######### real dataset colon cancer rmtvgl L1 penalties output :since the dataset is too large, we can pick the top 100 most variable genes.
-# === Setup ===
-library(e1071)
-library(Matrix)
-library(MASS)
-library(pROC)
 
-# === Step 1: Load Colon Cancer Dataset ===
-data <- read.matrix.csr("colon-cancer")  # Ensure LIBSVM format
-X_full <- as.matrix(data$x)              # 62 samples × 2000 features
-y <- data$y
 
-# === Step 2: Select Top 100 Most Variable Genes ===
-var_rank <- order(apply(X_full, 2, var), decreasing = TRUE)
-X <- X_full[, var_rank[1:100]]  # Final feature matrix: 62 × 100
-
-# === Step 3: Split into T Time Points ===
-T <- 10
-samples_per_time <- floor(nrow(X) / T)
-data_list <- list()
-for (t in 1:T) {
-  idx <- ((t - 1) * samples_per_time + 1):(t * samples_per_time)
-  data_list[[t]] <- X[idx, , drop = FALSE]
-}
-# Handle leftover samples
-if ((T * samples_per_time) < nrow(X)) {
-  data_list[[T]] <- rbind(data_list[[T]], X[(T * samples_per_time + 1):nrow(X), , drop = FALSE])
-}
-
-# === Step 4: Add Missing Values and Outliers (5%) ===
-set.seed(42)
-for (t in 1:T) {
-  X_t <- data_list[[t]]
-  mask_na <- matrix(runif(length(X_t)) < 0.05, nrow = nrow(X_t))
-  X_t[mask_na] <- NA
-  mask_outlier <- matrix(runif(length(X_t)) < 0.05, nrow = nrow(X_t))
-  X_t[mask_outlier] <- X_t[mask_outlier] * 10
-  data_list[[t]] <- X_t
-}
-
-# === Step 5: Create Sparse Ground Truth Using TVGL ===
-true_list <- tvgl_function(data_list, lambda = 5, beta = 0.5, penalty_type = "l1")
-
-# Binarize small values (< 0.05)
-true_list_sparse <- lapply(true_list, function(mat) {
-  mat[abs(mat) < 0.05] <- 0
-  mat
-})
-
-# === Step 6: Evaluate RM-TVGL ===
-result_rmtvgl <- evaluate_model(
-  true_list = true_list_sparse,
-  data_list = data_list,
-  my_penalty_type = "l1",
-  lambda = 0.5,
-  beta = 1
-)
-
-# === Step 7: Output Results ===
-print(result_rmtvgl)
-write.csv(as.data.frame(result_rmtvgl), "colon_rmtvgl_l1.csv", row.names = FALSE)
-
-#### real data colon cancer all output using 3 penalties, we only pick the top100 genes:
+#### real data colon cancer all output using 3 penalties, since the dataset is too large, we can pick the top 100 most variable genes(Table 2):
 library(Matrix)
 library(MASS)
 library(pROC)
 library(dplyr)
 library(e1071)
 
-# === Helper functions ===
+# Helper functions 
 summarize_metric <- function(x) sprintf("%.3f ± %.3f", mean(x), sd(x))
 
-# === Parameters ===
+#  Parameters 
 T <- 10
 lambda <- 0.5
 beta <- 1
@@ -460,7 +400,7 @@ penalties <- c("l1", "l2", "elastic")
 methods <- c("TVGL", "RM-TVGL")
 n_repeats <- 5
 
-# === Load Colon Cancer Data ===
+#  Load Colon Cancer Data 
 data <- read.matrix.csr("colon-cancer")  # LIBSVM format
 X_full <- as.matrix(data$x)              # 62 × 2000
 y <- data$y
@@ -469,7 +409,7 @@ y <- data$y
 var_rank <- order(apply(X_full, 2, var), decreasing = TRUE)
 X <- X_full[, var_rank[1:100]]
 
-# === Result storage ===
+#  Result storage
 all_results <- list()
 
 for (rep in 1:n_repeats) {
@@ -562,7 +502,7 @@ summary_df <- df_all %>%
 print(summary_df)
 write.csv(summary_df, "colon_summary_results.csv", row.names = FALSE)
 
-######leu real dataset all penalties output, we used top 200 genes:
+###### 5.leu real dataset all penalties output, we used top 200 genes(Table 3 ):
 # Required Libraries
 library(Matrix)
 library(MASS)
