@@ -1,3 +1,38 @@
+# ################################################################################
+# Function Overview for RM-TVGL Implementation:
+# ------------------------------------------------------------------------------
+
+# Core Solvers:
+# solve_tvgl: Solves the standard Time-Varying Graphical Lasso (TVGL) model.
+# solve_rmtvgl: Solves the proposed Robust and Missing-Data-Aware TVGL (RM-TVGL) model.
+
+# Robust Penalty & ADMM Support:
+# soft_threshold: Performs soft-thresholding (used in L1 regularization).
+# huber_grad: Computes the gradient of the Huber loss function.
+# update_theta_huber: Updates the precision matrix using the Huber penalty.
+
+# Expectation-Maximization:
+# em_estimate_S: Computes the expected sufficient statistics in the E-step of EM.
+
+# Wrapper Functions:
+# tvgl_function: Runs TVGL with appropriate preprocessing and parameters.
+# rmtvgl_function: Runs RM-TVGL including missing data/outlier handling.
+
+# Synthetic Data & Evaluation:
+# generate_synthetic_data: Creates benchmark synthetic datasets with known truth.
+# time_run: Measures runtime of a model execution.
+# evaluate_f1: Computes F1 score for edge recovery.
+# evaluate_auc: Calculates Area Under the Curve (AUC).
+# evaluate_mac: Computes Mean Absolute Change across time.
+# evaluate_edge_stability: Quantifies temporal consistency of graph estimates.
+
+# Experiment Management:
+# evaluate_model: Executes a model and evaluates metrics.
+# compare_methods: Compares performance between TVGL and RM-TVGL.
+# run_comparison_multiple: Repeats experiments across seeds or configs.
+# summarize: Aggregates and summarizes multiple runs.
+####################################################################################
+
 #1. solve_tvgl.R
 # TVGL baseline (Time-Varying Graphical Lasso) using ADMM
 
