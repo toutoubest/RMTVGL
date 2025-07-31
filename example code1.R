@@ -1,6 +1,6 @@
 #### here are the all example codes of RMTVGL:
 
-##### 1. RM-TVGL 05/15/2025  5 runs, example code, synthetic dataset(10dimentional), all penalties(Table 1):
+##### 1. RM-TVGL 05/15/2025  5 runs, example code, synthetic dataset(50dimentional), all penalties(Table 1):
 library(Matrix)
 library(MASS)
 library(pROC)
@@ -11,7 +11,7 @@ summarize_metric <- function(x) sprintf("%.3f ± %.3f", mean(x), sd(x))
 
 # some Parameters
 T <- 100
-p <- 10
+p <- 50
 lambda <- 0.5
 beta <- 1
 delta <- 1.0
@@ -101,7 +101,7 @@ print(summary_df)
 write.csv(summary_df, "RM_TVGL_10gene synthetic_summary.csv", row.names = FALSE)
 
 ################
-#2.10gene synthetic data the plot for different delta value of huber loss(Fig1):
+#2.   50-gene synthetic data the plot for different delta value of huber loss(Fig1):
 #curves of auc ,f1,mac,stability fr different delta:
 # Load required libraries
 library(Matrix)
@@ -113,7 +113,7 @@ library(ggplot2)
 
 # Parameters
 T <- 100
-p <- 10
+p <- 50
 lambda <- 0.5
 beta <- 1
 alpha_elastic <- 0.5
@@ -186,7 +186,7 @@ df_all <- bind_rows(all_results)
 df_long <- df_all %>%
   pivot_longer(cols = c(F1, AUC, MAC, Stability), names_to = "Metric", values_to = "Value")
 
-# --- Plot: one file per metric, no title/caption ---
+# Plot: one file per metric, no title/caption ---
 color_map <- c("elastic" = "#E64B35", "l1" = "#4DBBD5", "l2" = "#000000")
 line_style <- c("elastic" = "dashed", "l1" = "dashed", "l2" = "dashed")
 
@@ -325,9 +325,6 @@ summary_df <- df_all %>%
 # Output results
 print(summary_df)
 write.csv(summary_df, "Synthetic20_TVGL_RMTVGL_summary.csv", row.names = FALSE)
-
-
-
 
 
 
