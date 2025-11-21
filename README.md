@@ -1,7 +1,16 @@
-# RMTVGL
+# RMTVGL  
+Robust and Missing-Data-Aware Time-Varying Graphical Lasso
 
-#in the rmtvgl.R, I put down all helper functions .
+RMTVGL implements a robust extension of the Time-Varying Graphical Lasso (TVGL) tailored for high-dimensional temporal data with **missing values and heavy-tailed contamination**.  
+The method integrates:
 
-#in the example code1.R, I put down all example codes we need use for the synthetic datasets and real datasets.
+- **EM-based missing data imputation**,  
+- **Huber loss for robustness against outliers**, and  
+- **temporal smoothness regularization** to capture evolving network structures.
 
-#leu and colon cancer csvs are 2 real datasets I used in this project.
+It is designed for applications such as dynamic gene regulatory network inference, where data are noisy, incomplete, and time-indexed.
+
+This repository accompanies the methodology introduced in my paper:
+> *“Robust and Missing-Data-Aware Time-Varying Graphical Lasso (RM-TVGL) via EM-Based Adaptive Estimation and Nonconvex Regularization” (2025).*
+
+
