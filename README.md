@@ -10,10 +10,12 @@ The method integrates:
 
 It is designed for applications such as dynamic gene regulatory network inference, where data are noisy, incomplete, and time-indexed.
 
-This repository accompanies the methodology introduced in my paper:
+This repository accompanies the methodology introduced in the following published paper:
 
-> **Lingling Zhang (2025).** *“Robust and Missing-Data-Aware Time-Varying Graphical Lasso (RM-TVGL) for High-Dimensional Dynamic Network Estimation.”*
-
-
+> **Lingling Zhang (2025).**  
+> *Robust and Missing-Data-Aware Time-Varying Graphical Lasso (RM-TVGL) for High-Dimensional Dynamic Network Estimation.*  
+> **Statistics and Computing**, Springer Nature.  
+> [Published Article – SharedIt Link](https://rdcu.be/eSHxB)  
+> DOI: https://doi.org/10.1007/s11222-025-10782-9
 
 
