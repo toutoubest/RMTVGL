@@ -1,6 +1,6 @@
 #### here are the all example codes of RMTVGL:
 
-##### 1. RM-TVGL 05/15/2025  5 runs, example code, synthetic dataset(50dimentional), all penalties(Table 1):
+##### 1. RM-TVGL  5 runs, example code, synthetic dataset(50dimentional), all penalties(Table 1):
 library(Matrix)
 library(MASS)
 library(pROC)
@@ -222,7 +222,7 @@ library(MASS)
 library(pROC)
 library(dplyr)
 
-# --- AUC FUNCTION: Original version you used ---
+# AUC FUNCTION
 evaluate_auc <- function(true_mat, est_mat) {
   true_vec <- as.vector(true_mat)
   est_vec <- as.vector(est_mat)
@@ -329,7 +329,7 @@ write.csv(summary_df, "Synthetic20_TVGL_RMTVGL_summary.csv", row.names = FALSE)
 
 
 
-#######4. real dataset part: 05/15/2025 collin cancer real dataset :
+#######4. real dataset part: collin cancer real dataset :
 # Required packages
 install.packages("e1071")
 install.packages("Matrix")
