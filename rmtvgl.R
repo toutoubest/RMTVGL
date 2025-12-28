@@ -373,12 +373,12 @@ rmtvgl_function <- function(data_list, lambda, beta, delta = 1.0, rho = 1.0,
     return((Theta + t(Theta)) / 2)
   }
   
-  # === Initial E-step ===
+  # Initial E-step 
   em_out <- em_estimate_S(data_list)
   S_list <- em_out$S_list
   data_list <- em_out$X_list  # update with imputed data
   
-  # === Initialize ADMM variables ===
+  # Initialize ADMM variables 
   Theta_list <- lapply(1:T, function(t) diag(p))
   Z_list <- Theta_list
   U_list <- lapply(1:T, function(t) matrix(0, p, p))
@@ -412,7 +412,7 @@ rmtvgl_function <- function(data_list, lambda, beta, delta = 1.0, rho = 1.0,
       }
     }
     
-    # === Update S and imputed data for next EM step ===
+    #  Update S and imputed data for next EM step
     em_out <- em_estimate_S(data_list)
     S_list <- em_out$S_list
     data_list <- em_out$X_list
